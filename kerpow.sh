@@ -1,8 +1,9 @@
 #!/bin/bash
 
 ################################# VARS ###############################
-user="xenu"
-
+user="SET_USER"
+pass="SET_PASSWORD"
+######################################################################
 apt update
 apt -y upgrade
 apt-get autoremove
@@ -10,7 +11,8 @@ apt install vim-nox git openvpn
 echo "Installed Core Apps"
 sleep 2
 echo "Making Sudoer."
-useradd -m -G sudo,adm -s /bin/bash $user
+useradd -m -G sudo -s /bin/bash $user
+echo $pass | passwd $user --stdin
 echo "Setting Keys."
 sleep 2
 mkdir /home/$user/.ssh
