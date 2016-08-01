@@ -3,7 +3,24 @@
 ################################# VARS ###############################
 user="SET_USER"
 pass="SET_PASSWORD"
+pub="SET_PUB_KEY"
+core="SET_CORE" #Space seperated
 ######################################################################
+
+########### Check Files / Vars ###################################
+if [ $pass="SET_PASSWORD" || $user="SET_USER" || $core="SET_CORE"]
+then
+	echo "Dum Dum. VARS at the top of script... set them."
+fi
+
+if [ -f "$pub" ]
+then
+	echo "$pub found."
+else
+	echo "$pub Where's your fucking public key bra!?"
+fi
+
+########################################################
 ##### Check Shell ###### Taken from NYR/openvpn-install
 if readlink /proc/$$/exe | grep -qs "dash"; then
 	echo "sh? nah, BASH"
@@ -18,11 +35,12 @@ if [[ ! -e /dev/net/tun ]]; then
 	exit 3
 fi
 #########################
-
+sleep 2
+echo "k. Updating..."
 apt update
 apt -y upgrade
 apt-get autoremove
-apt install -y vim-nox git openvpn
+apt install -y $core
 echo "Installed Core Apps"
 sleep 2
 echo "Making Sudoer."
