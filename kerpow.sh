@@ -8,22 +8,36 @@ core="SET_CORE" #Space seperated
 ######################################################################
 
 ########### Check Files / Vars ###################################
+<<<<<<< HEAD
 if [ $pass="SET_PASSWORD" || $user="SET_USER" || $core="SET_CORE"];
+=======
+if [ $pass="SET_PASSWORD" || $user="SET_USER" || $core="SET_CORE"]
+>>>>>>> 7ada7fa3c34897cb9e687558a5d444f0e6fe7bbc
 then
 	echo "Dum Dum. VARS at the top of script... set them."
 fi
 
 if [ -f "$pub" ]
 then
+<<<<<<< HEAD
 	echo "Public key found. Good show ol boy"
 else
 	echo "Where's your fucking public key bra!?"
+=======
+	echo "$pub found."
+else
+	echo "$pub Where's your fucking public key bra!?"
+>>>>>>> 7ada7fa3c34897cb9e687558a5d444f0e6fe7bbc
 fi
 
 ########################################################
 ##### Check Shell ###### Taken from NYR/openvpn-install
 if readlink /proc/$$/exe | grep -qs "dash"; then
+<<<<<<< HEAD
 	echo "sh? nah, BASH! Switch yo shell."
+=======
+	echo "sh? nah, BASH"
+>>>>>>> 7ada7fa3c34897cb9e687558a5d444f0e6fe7bbc
 	exit 1
 fi
 if [[ "$EUID" -ne 0 ]]; then
@@ -46,8 +60,11 @@ sleep 2
 echo "Making Sudoer."
 useradd -m -G sudo -s /bin/bash $user
 echo $pass | passwd $user --stdin
+<<<<<<< HEAD
 sleep 2
 echo "ssh stuffs..."
+=======
+>>>>>>> 7ada7fa3c34897cb9e687558a5d444f0e6fe7bbc
 echo "Setting Keys."
 sleep 2
 mkdir /home/$user/.ssh
@@ -64,10 +81,15 @@ echo "Good?"
 sleep 2
 echo "Modifying ssh_config"
 sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config
+<<<<<<< HEAD
 sed -i "s/Port 22/Port 666/g" /etc/ssh/sshd_config
 sed -i "s/#PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 sleep 3
 echo "test ssh asap!"
+=======
+sed -i "s/Port 22/Port 1234/g" /etc/ssh/sshd_config
+sed -i "s/#PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+>>>>>>> 7ada7fa3c34897cb9e687558a5d444f0e6fe7bbc
 service ssh restart
 
 # Firewall
@@ -75,6 +97,7 @@ ufw allow ssh
 ufw allow 666
 ufw enable
 
+<<<<<<< HEAD
 ####### From NYRs OVPN scripty###########################
 newclient () {
 	# Generates the custom client.ovpn
@@ -421,4 +444,7 @@ verb 3" > /etc/openvpn/client-common.txt
 	echo "If you want to add more clients, you simply need to run this script another time!"
 fi
 #############################################################
+=======
+
+>>>>>>> 7ada7fa3c34897cb9e687558a5d444f0e6fe7bbc
 exit
