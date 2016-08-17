@@ -1,4 +1,6 @@
+
 #!/bin/bash
+
 pkg_mngr='apt-get'
 pkgs='openvpn vim-nox netcat nmap sudo finger python3'
 m_0='idoit'
@@ -9,7 +11,36 @@ pass='x0x0x0x'
 salt='0x0x0x0'
 holes='22 666'
 
-function root_check() {
+pause () {
+  read -p "Press [Enter] key to continue..." fackEnterKey
+}
+show_menus() {
+	clear
+	echo ""
+	echo "(c)hecks"
+	echo "(u)pdate"
+	echo "(b)ase"
+	echo "(m)ake babies"
+	echo "(l)ine"
+	echo "l(o)ad"
+	echo "(r)ock"
+	echo "e(x)it"
+}
+opts () {
+	read -r -p "? " choice
+	case $choice in
+		"c") pee_check py_check ;;
+		"u") update_schmupdate ;;
+		"b") install ;;
+		"m") making_babies ;;
+		"l") line ;;
+		"o") load ;;
+		"x") exit 0 ;;
+		"r") rock ;;
+		*) echo -e "${RED}..ERROR..${STD}" && sleep 2
+	esac
+}
+root_check () {
 	if [[ "$EUID" -ne 0 ]]; then
 		echo "root"
 		sleep 1
@@ -20,16 +51,18 @@ function root_check() {
 		echo "root [+]"
 	fi
 }
-function update_schmupdate() {
+update_schmupdate () {
 	echo "update schmupdate"
 	sleep 1
 	$pkg_mngr update || fail_net
-	$pkg_mngr install -y $pkgs
+}
+install () {
+	$pkg_mngr install -y $pkgs || fail_net
 }
 
-function set_ssh() {
+set_ssh () {
 	echo "Setting Keys."
-	if [[ -e '/home/$user/.ssh' ]]; then
+	if [[ -e "/home/$user/.ssh" ]]; then
 		echo 'ssh exists. skipping.'
 		sleep 1
 	else
@@ -47,7 +80,7 @@ function set_ssh() {
 
 }
 
-function pee_check() {
+pee_check () {
 	pub=$p_key
 	if [[ ! -e $pub ]]; then
 			echo "no key"
@@ -59,7 +92,7 @@ function pee_check() {
 	fi
 }
 
-function py_check() {
+py_check () {
 	pp='/usr/bin/python3'
 	if [[ ! -e $pp ]]; then
 			echo "no python3"
@@ -70,11 +103,12 @@ function py_check() {
 			#exit 1
 	fi
 }
-fail_net() {
+fail_net () {
 	echo 'do something about internet'
+	sleep 2
 }
 
-ufw_armed() {
+ufw_armed () {
 	for port in $holes;
 	do
 		ufw allow $port/tcp;
@@ -83,22 +117,19 @@ ufw_armed() {
 	done
 }
 
-bounce_ssh() {
+bounce_ssh () {
 	service ssh force-restart
 	echo "bounced ssh"
 	sleep 1
 }
-bounce_ufw() {
+bounce_ufw () {
 	ufw --force enable
 	echo "bounced ufw"
 	sleep 1
 }
-function making_babies() {
+making_babies () {
 	if [[ ! -e "/home/$user/.cry" ]]; then
 		mkdir /home/$user/.cry
-		chmod a+x sys_proceed load
-		chown -R $user:$user sys_proceed load
-		echo "babies made"
 		sleep 1
 	else
 		echo "already cry'd"
@@ -106,14 +137,24 @@ function making_babies() {
 	fi
 		rsync -avp line/* /home/$user/.cry/
 		rsync -avp load/*.conf /etc/profile.d/
+		echo "babies [+]"
 		sleep 1
 }
-
-rock() {
+line () {
+	set_ssh
+	ufw_armed
+}
+load () {
+	echo "load"
+}
+rock () {
     read -r -p "${1:-Rock and Roll? [y/N]} " response
     case $response in
         [yY][eE][sS]|[yY])
             true
+						bounce_ufw
+						bounce_ssh
+						echo "bounced [+]"
 						echo "reboot [+]"
 						sleep 1
 						reboot
@@ -124,10 +165,12 @@ rock() {
             ;;
     esac
 }
-ufw_armed
-#root_check
-#set_ssh
-#pee_check
-#py_check
-#update_schmupdate
-#making_babies
+
+
+root_check
+trap '' SIGINT SIGQUIT SIGTSTP
+while true
+do
+	show_menus
+	opts
+done
