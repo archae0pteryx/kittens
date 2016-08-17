@@ -45,6 +45,7 @@ apt-get autoremove
 apt install -y $core
 echo "Installed Core Apps"
 sleep 2
+echo ""
 echo "restarting"
 sleep 4
 reboot
