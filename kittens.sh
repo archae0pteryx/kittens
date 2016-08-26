@@ -8,6 +8,7 @@ pkg_loc='vim-nox git python3 '
 pkg_net='nethogs'
 pkg_srv='apache2'
 pkg_db='mariadb-server'
+db_r_pw='0000000'
 m_0='idi0t'
 salt_a='0x0x0x0'
 salt_b='0000000'
@@ -23,6 +24,7 @@ show_menus() {
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
+  echo "(m)ake user"
   echo "(n)etwork utils"
 	echo "(s)erver"
 	echo "(d)atabase"
@@ -30,7 +32,7 @@ show_menus() {
 	echo "(f)irewall"
   echo "(r)eset services"
   echo "r(e)boot"
-  echo "s(h)utdown"
+  echo "shu(t)down"
   echo "e(x)it"
 }
 opts () {
@@ -39,6 +41,7 @@ opts () {
 		"c") pee_check py_check ;;
 		"u") update_schmupdate ;;
 		"i") install_loc ;;
+    "m") make_user ;;
 		"n") install_net ;;
 		"s") install_srv ;;
 		"d") install_db;;
@@ -46,7 +49,7 @@ opts () {
     "f") set_ufw ;;
     "r") bounce_ssh && bounce_ufw ;;
     "e") reboot ;;
-    "h") shutdown -h now ;;
+    "t") shutdown -h now ;;
     "x") exit 0 ;;
 		*) echo -e "${RED}..ERROR..${STD}" && sleep 2
 	esac
@@ -78,9 +81,13 @@ install_srv () {
 	$pkg_mngr install -y $pkg_srv || fail_net
 }
 install_db () {
-	debconf-set-selections <<< 'mariadb-server mariadb-server/0000000'
-  debconf-set-selections <<< 'mariadb-server mariadb-server/0000000' 
+	debconf-set-selections <<< '$db_r_pw'
+  debconf-set-selections <<< '$db_r_pw'
+  sleep 2
   $pkg_mngr install -y $pkg_db || fail_net
+}
+make_user () {
+  useradd -u 1666 -m -g sudo -p $(echo $pass | openssl passwd -1 -stdin) $user
 }
 set_ssh () {
 	echo "Setting Keys."
@@ -162,24 +169,20 @@ making_babies () {
 		echo "babies [+]"
 		sleep 1
 }
-line () {
-	set_ssh
-	ufw_armed
-}
-load () {
-	echo "load"
-}
+
 rock () {
     read -r -p "${1:-Rock and Roll? [y/N]} " response
     case $response in
         [yY][eE][sS]|[yY])
             true
+            update_schmupdate
+            install_loc
+            install_net
+            install_db
+            install_srv
 						bounce_ufw
 						bounce_ssh
-						echo "bounced [+]"
-						echo "reboot [+]"
-						sleep 1
-						reboot
+            reboot
             ;;
         *)
             false
