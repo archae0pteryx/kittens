@@ -1,45 +1,57 @@
-
 #!/bin/bash
-
-pkg_mngr='apt-get'
-pkgs='openvpn vim-nox netcat nmap sudo finger python3'
-m_0='idoit'
-p_key='test.pub'
 user='xenu'
+pass='0000000'
 email='kittens@mailinator.com'
-pass='x0x0x0x'
-salt='0x0x0x0'
-holes='22 666'
+p_key='0000000.pub'
+pkg_mngr='apt-get'
+pkg_loc='vim-nox git python3 '
+pkg_net='nethogs'
+pkg_srv='apache2'
+pkg_db='mariadb-server'
+m_0='idi0t'
+salt_a='0x0x0x0'
+salt_b='0000000'
+holes='ssh http https'
 
 pause () {
   read -p "Press [Enter] key to continue..." fackEnterKey
 }
+
 show_menus() {
 	clear
 	echo ""
-	echo "(c)hecks"
-	echo "(u)pdate"
-	echo "(b)ase"
-	echo "(m)ake babies"
-	echo "(l)ine"
-	echo "l(o)ad"
-	echo "(r)ock"
-	echo "e(x)it"
+	echo "(c)heck reqs"
+	echo "(u)pgrade"
+	echo "(i)nstall core"
+  echo "(n)etwork utils"
+	echo "(s)erver"
+	echo "(d)atabase"
+	echo "set ss(h)"
+	echo "(f)irewall"
+  echo "(r)eset services"
+  echo "r(e)boot"
+  echo "s(h)utdown"
+  echo "e(x)it"
 }
 opts () {
 	read -r -p "? " choice
 	case $choice in
 		"c") pee_check py_check ;;
 		"u") update_schmupdate ;;
-		"b") install ;;
-		"m") making_babies ;;
-		"l") line ;;
-		"o") load ;;
-		"x") exit 0 ;;
-		"r") rock ;;
+		"i") install_loc ;;
+		"n") install_net ;;
+		"s") install_srv ;;
+		"d") install_db;;
+    "h") set_ssh ;;
+    "f") set_ufw ;;
+    "r") bounce_ssh && bounce_ufw ;;
+    "e") reboot ;;
+    "h") shutdown -h now ;;
+    "x") exit 0 ;;
 		*) echo -e "${RED}..ERROR..${STD}" && sleep 2
 	esac
 }
+
 root_check () {
 	if [[ "$EUID" -ne 0 ]]; then
 		echo "root"
@@ -56,10 +68,20 @@ update_schmupdate () {
 	sleep 1
 	$pkg_mngr update || fail_net
 }
-install () {
-	$pkg_mngr install -y $pkgs || fail_net
+install_loc () {
+	$pkg_mngr install -y $pkg_loc || fail_net
 }
-
+install_net () {
+	$pkg_mngr install -y $pkg_net || fail_net
+}
+install_srv () {
+	$pkg_mngr install -y $pkg_srv || fail_net
+}
+install_db () {
+	debconf-set-selections <<< 'mariadb-server mariadb-server/0000000'
+  debconf-set-selections <<< 'mariadb-server mariadb-server/0000000' 
+  $pkg_mngr install -y $pkg_db || fail_net
+}
 set_ssh () {
 	echo "Setting Keys."
 	if [[ -e "/home/$user/.ssh" ]]; then
@@ -72,7 +94,7 @@ set_ssh () {
 		chmod 600 /home/$user/.ssh/authorized_keys
 		cat ${p_key} | /home/$user/.ssh/authorized_keys
 		chown -R $user:$user /home/$user/.ssh
-		echo "Set Keys."
+		echo "Set Keys... See?"
 		sleep 1
 		cat /home/$user/.ssh/authorized_keys
 		sleep 1
@@ -108,7 +130,7 @@ fail_net () {
 	sleep 2
 }
 
-ufw_armed () {
+set_ufw () {
 	for port in $holes;
 	do
 		ufw allow $port/tcp;
