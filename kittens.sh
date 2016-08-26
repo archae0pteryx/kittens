@@ -81,10 +81,8 @@ install_srv () {
 	$pkg_mngr install -y $pkg_srv || fail_net
 }
 install_db () {
-	debconf-set-selections <<< '$db_r_pw'
-  debconf-set-selections <<< '$db_r_pw'
-  sleep 2
   $pkg_mngr install -y $pkg_db || fail_net
+  mysqladmin -u root password $pass
 }
 make_user () {
   useradd -u 1666 -m -g sudo -p $(echo $pass | openssl passwd -1 -stdin) $user
