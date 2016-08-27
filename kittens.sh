@@ -121,8 +121,6 @@ set_ssh () {
     case $response in
         [yY][eE][sS]|[yY])
             true
-            chmod -R 700 /home/$user/.ssh
-            chown -R root /home/$user/.ssh
             rm -rf /home/$user/.ssh
             ;;
         *)
