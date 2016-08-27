@@ -121,6 +121,7 @@ set_ssh () {
     case $response in
         [yY][eE][sS]|[yY])
             true
+            chmod -R 700 /home/$user/.ssh
             chown -R root /home/$user/.ssh
             rm -rf /home/$user/.ssh
             ;;
@@ -146,7 +147,7 @@ set_ssh () {
     sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-    sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
+    sed -i 's/#AuthorizedKeysFile      %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
 }
 
 pee_check () {
