@@ -28,6 +28,7 @@ show_menus() {
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
+  echo "(p)ermissions reset"
   echo "(m)ake user"
   echo "(n)etwork utils"
 	echo "(s)erver"
@@ -46,6 +47,7 @@ opts () {
 		"c") pee_check py_check ;;
 		"u") update_schmupdate ;;
 		"i") install_base ;;
+    "p") perms ;;
     "m") make_user ;;
 		"n") install_net ;;
 		"s") install_srv ;;
@@ -91,7 +93,9 @@ install_db () {
   $pkg_mngr install -y $pkg_db || fail_net
   mysqladmin -u root password $pass
 }
-
+perms () {
+  chown -R $user:$user /home/$user || return
+}
 make_user () {
   grep -q "$user" /etc/passwd
     if [ $? -eq 0 ]; then
