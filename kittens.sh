@@ -129,22 +129,21 @@ set_ssh () {
             return
             ;;
       esac
-    else
-      mkdir /home/$user/.ssh || echo "cant make ssh folder"
-    	chmod 700 /home/$user/.ssh || echo "cant chown ssh"
-    	touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-    	chmod 600 /home/$user/.ssh/authorized_keys || echo "cant mod auth_keys"
-    	cat ${pub_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
-    	echo "Set Keys... See?"
-    	sleep 1
-    	cat /home/$user/.ssh/authorized_keys
-      echo "adjusting config / removing root login"
-    	sleep 1
-      sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
-      sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-      sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-      sed -i 's/#AuthorizedKeysFile     %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
   fi
+  mkdir /home/$user/.ssh || echo "cant make ssh folder"
+  chmod 700 /home/$user/.ssh || echo "cant chown ssh"
+  touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
+  chmod 600 /home/$user/.ssh/authorized_keys || echo "cant mod auth_keys"
+  cat ${pub_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+  echo "Set Keys... See?"
+  sleep 1
+  cat /home/$user/.ssh/authorized_keys
+  echo "adjusting config / removing root login"
+  sleep 1
+  sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
+  sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+  sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+  sed -i 's/#AuthorizedKeysFile     %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
 }
 
 pee_check () {
