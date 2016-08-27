@@ -134,7 +134,7 @@ set_ssh () {
     	chmod 700 /home/$user/.ssh || echo "cant chown ssh"
     	touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
     	chmod 600 /home/$user/.ssh/authorized_keys || echo "cant mod auth_keys"
-    	cat ${p_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+    	cat ${pub_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
     	echo "Set Keys... See?"
     	sleep 1
     	cat /home/$user/.ssh/authorized_keys
