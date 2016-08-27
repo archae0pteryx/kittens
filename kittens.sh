@@ -144,6 +144,8 @@ set_ssh () {
   sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
   sed -i 's/#AuthorizedKeysFile     %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
+  echo "set ssh."
+  sleep 2
 }
 
 pee_check () {
