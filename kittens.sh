@@ -95,11 +95,13 @@ install_db () {
 make_user () {
   grep -q "$user" /etc/passwd
     if [ $? -eq 0 ]; then
-      return echo "user exists"
+        echo "user exists"
+        sleep 1
+      return
     fi
     echo "new pass"
     useradd -m -G sudo -s /bin/bash -p $(openssl passwd $pass) $user
-    chown -R $user:$user /home/$user 
+    chown -R $user:$user /home/$user
     pause
 }
 
