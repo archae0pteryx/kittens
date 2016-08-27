@@ -98,8 +98,7 @@ make_user () {
   fi
   #pass=$(perl -e 'print crypt($ARGV[0], $salt),"\n"'
   #useradd -p `mkpasswd "$pass"` -d /home/"$user" -m -g users -s /bin/bash "$user"
-  useradd -m -g $user -s /bin/bash -p $(echo $pass | openssl passwd -1 -stdin) $user
-  usermod -aG sudo $user
+  useradd -m -G sudo -s /bin/bash -p $(echo $pass | openssl passwd) $user
   pause
 }
 set_ssh () {
