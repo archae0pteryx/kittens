@@ -1,6 +1,6 @@
 #!/bin/bash
 # doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
-
+# git clone https://github.com/archae0pteryx/kittens.git
 
 user='xenu'
 password='0000000'
@@ -98,7 +98,7 @@ make_user () {
   fi
   #pass=$(perl -e 'print crypt($ARGV[0], $salt),"\n"'
   #useradd -p `mkpasswd "$pass"` -d /home/"$user" -m -g users -s /bin/bash "$user"
-  useradd -m -G sudo -s /bin/bash -p $(echo $pass | openssl passwd) $user
+  useradd -m -G sudo -s /bin/bash -p $(echo $pass | openssl passwd -1) $user
   pause
 }
 set_ssh () {
