@@ -7,7 +7,7 @@ password='0000000'
 email='kittens@mailinator.com'
 p_key='0000000.pub'
 pkg_mngr='apt-get'
-pkg_loc='vim-nox git python3 '
+pkg_base='vim-nox git python3 '
 pkg_net='nethogs'
 pkg_srv='apache2'
 pkg_db='mariadb-server'
@@ -45,7 +45,7 @@ opts () {
     "k") rock ;;
 		"c") pee_check py_check ;;
 		"u") update_schmupdate ;;
-		"i") install_loc ;;
+		"i") install_base ;;
     "m") make_user ;;
 		"n") install_net ;;
 		"s") install_srv ;;
@@ -69,6 +69,7 @@ root_check () {
 		exit 0
 	else
 		echo "root [+]"
+    sleep 1
 	fi
 }
 update_schmupdate () {
@@ -76,8 +77,8 @@ update_schmupdate () {
 	sleep 1
 	$pkg_mngr update || fail_net
 }
-install_loc () {
-	$pkg_mngr install -y $pkg_loc || fail_net
+install_base () {
+	$pkg_mngr install -y $pkg_base || fail_net
 }
 install_net () {
 	$pkg_mngr install -y $pkg_net || fail_net
@@ -85,22 +86,22 @@ install_net () {
 install_srv () {
 	$pkg_mngr install -y $pkg_srv || fail_net
 }
+
 install_db () {
   $pkg_mngr install -y $pkg_db || fail_net
   mysqladmin -u root password $pass
 }
+
 make_user () {
   grep -q "$user" /etc/passwd
-  if [ $? -eq $SUCCESS ]
-    then
-    echo "Usr Exists."
-    return
-  fi
-  #pass=$(perl -e 'print crypt($ARGV[0], $salt),"\n"'
-  #useradd -p `mkpasswd "$pass"` -d /home/"$user" -m -g users -s /bin/bash "$user"
-  useradd -m -G sudo -s /bin/bash -p $(openssl passwd $pass) $user
-  pause
+    if [ $? -eq 0 ]; then
+      return echo "user exists"
+    fi
+    echo "new pass"
+    useradd -m -G sudo -s /bin/bash -p $(openssl passwd $pass) $user
+    pause
 }
+
 set_ssh () {
   sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
   sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
