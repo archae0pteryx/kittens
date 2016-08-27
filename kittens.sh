@@ -112,13 +112,12 @@ make_user () {
 }
 
 set_ssh () {
-
   echo "Setting Keys."
   pause
 	if [[ -e "/home/$user/.ssh" ]]; then
 		echo "ssh folder exists"
     read -r -p "${1:-Remove? [y/N]} " response
-    case $response in
+      case $response in
         [yY][eE][sS]|[yY])
             true
             rm -rf /home/$user/.ssh
@@ -129,27 +128,27 @@ set_ssh () {
             sleep 1
             return
             ;;
-    esac
+      esac
+    else
+      mkdir /home/$user/.ssh || echo "cant make ssh folder"
+    	chmod 700 /home/$user/.ssh || echo "cant chown ssh"
+    	touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
+    	chmod 600 /home/$user/.ssh/authorized_keys || echo "cant mod auth_keys"
+    	cat ${p_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+    	echo "Set Keys... See?"
+    	sleep 1
+    	cat /home/$user/.ssh/authorized_keys
+      echo "adjusting config / removing root login"
+    	sleep 1
+      sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
+      sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+      sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+      sed -i 's/#AuthorizedKeysFile     %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
   fi
-		mkdir /home/$user/.ssh || echo "cant make ssh folder"
-		chmod 700 /home/$user/.ssh || echo "cant chown ssh"
-		touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-		chmod 600 /home/$user/.ssh/authorized_keys || echo "cant mod auth_keys"
-		cat ${p_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
-		chown -R $user:$user /home/$user/.ssh
-		echo "Set Keys... See?"
-		sleep 1
-		cat /home/$user/.ssh/authorized_keys
-    echo "adjusting config / removing root login"
-		sleep 1
-    sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
-    sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-    sed -i 's/#AuthorizedKeysFile      %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
 }
 
 pee_check () {
-	pub=$p_key
+	pub=$pub_key
 	if [[ ! -e $pub ]]; then
 			echo "no key"
 			sleep 1
@@ -195,19 +194,6 @@ bounce_ufw () {
 	echo "bounced ufw"
 	sleep 1
 }
-making_babies () {
-	if [[ ! -e "/home/$user/.cry" ]]; then
-		mkdir /home/$user/.cry
-		sleep 1
-	else
-		echo "already cry'd"
-		sleep 1
-	fi
-		rsync -avp line/* /home/$user/.cry/
-		rsync -avp load/*.conf /etc/profile.d/
-		echo "babies [+]"
-		sleep 1
-}
 
 rock () {
     read -r -p "${1:-Rock and Roll? [y/N]} " response
@@ -215,7 +201,7 @@ rock () {
         [yY][eE][sS]|[yY])
             true
             update_schmupdate
-            install_loc
+            install_base
             install_net
             install_db
             install_srv
@@ -230,7 +216,7 @@ rock () {
     esac
 }
 
-
+clear
 root_check
 trap '' SIGINT SIGQUIT SIGTSTP
 while true
