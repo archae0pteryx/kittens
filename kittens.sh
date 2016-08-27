@@ -132,7 +132,7 @@ set_ssh () {
   fi
   mkdir /home/$user/.ssh || echo "cant make ssh folder"
   touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-  cat $pub_key | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+  echo $pub_key >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   echo "Set Keys... See?"
   pause
   cat /home/$user/.ssh/authorized_keys
@@ -147,7 +147,7 @@ set_ssh () {
   chown -R $user:$user /home/$user/.ssh
   chmod 700 /home/$user/.ssh
   chmod 600 /home/$user/authorized_keys
-  sleep 2 
+  sleep 2
 }
 
 pee_check () {
