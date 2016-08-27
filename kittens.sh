@@ -21,6 +21,7 @@ pause () {
 show_menus() {
 	clear
 	echo ""
+  echo "roc(k)"
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
@@ -38,6 +39,7 @@ show_menus() {
 opts () {
 	read -r -p "? " choice
 	case $choice in
+    "k") rock ;;
 		"c") pee_check py_check ;;
 		"u") update_schmupdate ;;
 		"i") install_loc ;;
@@ -85,10 +87,14 @@ install_db () {
   mysqladmin -u root password $pass
 }
 make_user () {
-  useradd -u 1666 -m -g sudo -p $(echo $pass | openssl passwd -1 -stdin) $user
+  useradd -u 1666 -m -g sudo -p -s /bin/bash $(echo $pass | openssl passwd -1 -stdin) $user
 }
 set_ssh () {
-	echo "Setting Keys."
+  sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
+  sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+  sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+  sed -i 's/#AuthorizedKeyFile/AuthorizedKeyFile/g' /etc/ssh/sshd_config
+  echo "Setting Keys."
 	if [[ -e "/home/$user/.ssh" ]]; then
 		echo 'ssh exists. skipping.'
 		sleep 1
