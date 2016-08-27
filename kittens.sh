@@ -1,6 +1,9 @@
 #!/bin/bash
+# doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
+
+
 user='xenu'
-pass='0000000'
+password='0000000'
 email='kittens@mailinator.com'
 p_key='0000000.pub'
 pkg_mngr='apt-get'
@@ -10,8 +13,8 @@ pkg_srv='apache2'
 pkg_db='mariadb-server'
 db_r_pw='0000000'
 m_0='idi0t'
-salt_a='0x0x0x0'
-salt_b='0000000'
+salt='0x0x0x0'
+
 holes='ssh http https'
 
 pause () {
@@ -87,7 +90,15 @@ install_db () {
   mysqladmin -u root password $pass
 }
 make_user () {
-  useradd -u 1234 -d /home/$user -g $user -p -s /bin/bash $(echo $pass | openssl passwd -1 -stdin) $user
+  grep -q "$user" /etc/passwd
+  if [ $? -eq $SUCCESS ]
+    then
+    echo "Usr Exists."
+    return
+  fi
+  #pass=$(perl -e 'print crypt($ARGV[0], $salt),"\n"'
+  #useradd -p `mkpasswd "$pass"` -d /home/"$user" -m -g users -s /bin/bash "$user"
+  useradd -m -g $user -s /bin/bash -p $(echo $pass | openssl passwd -1 -stdin) $user
   usermod -aG sudo $user
   pause
 }
