@@ -15,7 +15,7 @@ salt_b='0000000'
 holes='ssh http https'
 
 pause () {
-  read -p "Press [Enter] key to continue..." fackEnterKey
+  read -r -p "Press [Enter]" on_press
 }
 
 show_menus() {
@@ -87,17 +87,20 @@ install_db () {
   mysqladmin -u root password $pass
 }
 make_user () {
-  useradd -u 1666 -m -g sudo -p -s /bin/bash $(echo $pass | openssl passwd -1 -stdin) $user
+  useradd -u 1234 -d /home/$user -g $user -p -s /bin/bash $(echo $pass | openssl passwd -1 -stdin) $user
+  usermod -aG sudo $user
+  pause
 }
 set_ssh () {
   sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
   sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-  sed -i 's/#AuthorizedKeyFile/AuthorizedKeyFile/g' /etc/ssh/sshd_config
+  sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
   echo "Setting Keys."
+  pause
 	if [[ -e "/home/$user/.ssh" ]]; then
 		echo 'ssh exists. skipping.'
-		sleep 1
+		pause
 	else
 		mkdir /home/$user/.ssh
 		chmod 700 /home/$user/.ssh
@@ -109,6 +112,7 @@ set_ssh () {
 		sleep 1
 		cat /home/$user/.ssh/authorized_keys
 		sleep 1
+    pause
 	fi
 
 }
