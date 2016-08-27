@@ -131,10 +131,8 @@ set_ssh () {
       esac
   fi
   mkdir /home/$user/.ssh || echo "cant make ssh folder"
-  chmod 700 /home/$user/.ssh || echo "cant chown ssh"
   touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-  chmod 600 /home/$user/.ssh/authorized_keys || echo "cant mod auth_keys"
-  cat ${pub_key} | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+  cat $pub_key | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   echo "Set Keys... See?"
   pause
   cat /home/$user/.ssh/authorized_keys
@@ -145,7 +143,11 @@ set_ssh () {
   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
   sed -i 's/#AuthorizedKeysFile     %h/.ssh/authorized_keys/AuthorizedKeysFile %h/.ssh/authorized_keys/g' /etc/ssh/sshd_config
   echo "set ssh."
-  pause
+  echo "chowning"
+  chown -R $user:$user /home/$user/.ssh
+  chmod 700 /home/$user/.ssh
+  chmod 600 /home/$user/authorized_keys
+  sleep 2 
 }
 
 pee_check () {
