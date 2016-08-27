@@ -5,7 +5,7 @@
 user='xenu'
 password='0000000'
 email='kittens@mailinator.com'
-p_key='0000000.pub'
+pub_key='0000000.pub'
 pkg_mngr='apt-get'
 pkg_base='vim-nox git python3 '
 pkg_net='nethogs'
@@ -113,9 +113,21 @@ set_ssh () {
   echo "Setting Keys."
   pause
 	if [[ -e "/home/$user/.ssh" ]]; then
-		echo 'ssh exists. skipping.'
-		pause
-	else
+		echo "ssh folder exists"
+    read -r -p "${1:-Remove? [y/N]} " response
+    case $response in
+        [yY][eE][sS]|[yY])
+            true
+            rm -rf /home/$user/.ssh
+            ;;
+        *)
+            false
+            echo "okie."
+            sleep 1
+            return
+            ;;
+    esac
+  fi
 		mkdir /home/$user/.ssh
 		chmod 700 /home/$user/.ssh
 		touch /home/$user/.ssh/authorized_keys
@@ -127,8 +139,6 @@ set_ssh () {
 		cat /home/$user/.ssh/authorized_keys
 		sleep 1
     pause
-	fi
-
 }
 
 pee_check () {
