@@ -4,7 +4,7 @@
 
 user='xenu'
 password='0000000'
-pub_key=''
+pub_key='0000000.pub'
 email='kittens@mailinator.com'
 pkg_mngr='apt-get'
 pkg_base='vim-nox git python3 '
@@ -131,7 +131,7 @@ set_ssh () {
       esac
   fi
   echo "im outta the if!"
-  dir_nonsense
+  sleep 2
 }
 dir_nonsense () {
   echo "mkdir"
