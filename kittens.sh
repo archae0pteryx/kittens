@@ -139,7 +139,7 @@ dir_nonsense () {
   sleep 1
   #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
   echo "echo key"
-  echo $pub_key >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+  cat $pub_key > /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   echo "Dolphinately?"
   sleep 1
   cat /home/$user/.ssh/authorized_keys
@@ -241,7 +241,7 @@ rock () {
 
 clear
 root_check
-trap '' SIGINT SIGQUIT SIGTSTP
+#trap '' SIGINT SIGQUIT SIGTSTP
 while true
 do
 	show_menus
