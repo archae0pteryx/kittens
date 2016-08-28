@@ -4,8 +4,8 @@
 
 user='xenu'
 password='0000000'
+pub_key=0000000.pub
 email='kittens@mailinator.com'
-pub_key='0000000.pub'
 pkg_mngr='apt-get'
 pkg_base='vim-nox git python3 '
 pkg_net='nethogs'
