@@ -139,6 +139,7 @@ dir_nonsense () {
   sleep 1
   #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
   echo "echo key"
+  touch /home/$user/.ssh/authorized_keys
   cat $pub_key > /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   echo "Dolphinately?"
   sleep 1
