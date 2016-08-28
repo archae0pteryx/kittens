@@ -24,7 +24,7 @@ pause () {
 show_menus() {
 	clear
 	echo ""
-  echo "   roc(k)"
+  echo "(k)   ROCK(k)"
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
@@ -33,7 +33,7 @@ show_menus() {
   echo "(n)etwork utils"
 	echo "(s)erver"
 	echo "(d)atabase"
-	echo "set ss(h)"
+	echo "(h)set ss(h)"
 	echo "(f)irewall"
   echo "(r)eset services"
   echo "r(e)boot"
@@ -132,8 +132,8 @@ set_ssh () {
     else
       dir_nonsense
   fi
-  echo "im outta the if!"
-  sleep 2
+  #echo "im outta the if!"
+  #sleep 2
 }
 dir_nonsense () {
   echo "mkdir"
@@ -159,7 +159,7 @@ dir_nonsense () {
   chmod 700 /home/$user/.ssh
   chmod 600 /home/$user/.ssh/authorized_keys
   echo "chowned"
-  pause 2
+  sleep 2
 }
 pub_check () {
 	pub=$pub_key
