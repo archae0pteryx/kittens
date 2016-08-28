@@ -231,6 +231,7 @@ rock () {
             install_srv
             make_user
             set_ssh
+            set_ufw
             echo "fin."
             sleep 3
             reboot
