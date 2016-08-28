@@ -2,12 +2,12 @@
 # doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
 # git clone https://github.com/archae0pteryx/kittens.git
 
-user='xenu'
+user='securfr1'
 password='0000000'
-pub_key='0000000.pub'
-email='kittens@mailinator.com'
+pub_key='/home/xenu/cry/public/si_rsa.pub'
+email=''
 pkg_mngr='apt-get'
-pkg_base='vim-nox git python3 '
+pkg_base=''
 pkg_net='nethogs'
 pkg_srv='apache2 python-letsencrypt-apache php libapache2-mod-php php-mcrypt php-mysql'
 pkg_db='mariadb-server'
@@ -24,7 +24,7 @@ pause () {
 show_menus() {
 	clear
 	echo ""
-  echo "roc(k)"
+  echo "   roc(k)"
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
@@ -109,7 +109,7 @@ make_user () {
     echo "new pass"
     useradd -m -G sudo -s /bin/bash -p $(openssl passwd $pass) $user
     chown -R $user:$user /home/$user
-    pause
+    sleep 1
 }
 
 set_ssh () {
@@ -222,10 +222,11 @@ rock () {
     case $response in
         [yY][eE][sS]|[yY])
             true
+            root_check
             pub_check
             #py_check
             update_schmupdate
-            install_base
+            #install_base
             #install_net
             install_db
             install_srv
