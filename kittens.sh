@@ -9,7 +9,7 @@ pub_key='0000000.pub'
 pkg_mngr='apt-get'
 pkg_base='vim-nox git python3 '
 pkg_net='nethogs'
-pkg_srv='apache2'
+pkg_srv='apache2 php libapache2-mod-php php-mcrypt php-mysql'
 pkg_db='mariadb-server'
 db_r_pw='0000000'
 m_0='idi0t'
@@ -87,6 +87,7 @@ install_net () {
 }
 install_srv () {
 	$pkg_mngr install -y $pkg_srv || fail_net
+  bounce_ufw
 }
 
 install_db () {
@@ -113,7 +114,6 @@ make_user () {
 
 set_ssh () {
   echo "Setting Keys."
-  pause
 	if [[ -e "/home/$user/.ssh" ]]; then
 		echo "ssh folder exists"
     read -r -p "${1:-Remove? [y/N]} " response
@@ -124,41 +124,45 @@ set_ssh () {
             ;;
         *)
             false
-            echo "okie."
+            echo "okie. not removing squat"
             sleep 1
-            return
             ;;
       esac
+  else
+      echo "mkdir"
+      mkdir /home/$user/.ssh || echo "cant make ssh folder"
+      sleep 1
+      #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
+      echo "echo key"
+      echo "$pub_key" >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+      echo "Dolphinately?"
+      sleep 1
+      cat /home/$user/.ssh/authorized_keys
+      echo "adjusting config / removing root login"
+      sleep 1
+      sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
+      sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+      sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+      sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
+      echo "done adjusting."
+      sleep 1
+      echo "chowning"
+      chown -R $user:$user /home/$user/.ssh
+      chmod 700 /home/$user/.ssh
+      chmod 600 /home/$user/authorized_keys
+      echo "chowned"
+      pause 2
   fi
-  mkdir /home/$user/.ssh || echo "cant make ssh folder"
-  touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-  echo "$pub_key" >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
-  echo "Set Keys... See?"
-  pause
-  cat /home/$user/.ssh/authorized_keys
-  echo "adjusting config / removing root login"
-  pause
-  sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
-  sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-  sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-  sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-  echo "set ssh."
-  echo "chowning"
-  chown -R $user:$user /home/$user/.ssh
-  chmod 700 /home/$user/.ssh
-  chmod 600 /home/$user/authorized_keys
-  sleep 2
 }
 
-pee_check () {
+pub_check () {
 	pub=$pub_key
 	if [[ ! -e $pub ]]; then
-			echo "no key"
-			sleep 1
+			echo "no ssh key.pub"
+			sleep 2
 		else
 			echo "key [+]"
-			sleep 1
-			cat $pub
+			sleep 2
 	fi
 }
 
@@ -197,19 +201,32 @@ bounce_ufw () {
 	echo "bounced ufw"
 	sleep 1
 }
+bounce_srv () {
+  systemctl restart apache2
+  echo "bounced apache"
+  sleep 1
+}
+
+bounce_net () {
+  return
+}
 
 rock () {
-    read -r -p "${1:-Rock and Roll? [y/N]} " response
+    read -r -p "${1:-Rock? y/n} " response
     case $response in
         [yY][eE][sS]|[yY])
             true
+            pub_check
+            #py_check
             update_schmupdate
             install_base
-            install_net
+            #install_net
             install_db
             install_srv
-						bounce_ufw
-						bounce_ssh
+            make_user
+            set_ssh
+            echo "fin."
+            sleep 3
             reboot
             ;;
         *)
