@@ -134,7 +134,7 @@ set_ssh () {
       sleep 1
       #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
       echo "echo key"
-      echo "$pub_key" >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+      echo $pub_key >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
       echo "Dolphinately?"
       sleep 1
       cat /home/$user/.ssh/authorized_keys
