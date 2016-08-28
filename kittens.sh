@@ -4,7 +4,7 @@
 
 user='securfr1'
 password='0000000'
-pub_key='/home/xenu/cry/public/si_rsa.pub'
+pub_key='1111111.pub'
 email=''
 pkg_mngr='apt-get'
 pkg_base=''
