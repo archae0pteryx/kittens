@@ -129,6 +129,8 @@ set_ssh () {
             sleep 1
             ;;
       esac
+    else
+      dir_nonsense
   fi
   echo "im outta the if!"
   sleep 2
