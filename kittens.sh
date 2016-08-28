@@ -157,7 +157,7 @@ dir_nonsense () {
   echo "chowning"
   chown -R $user:$user /home/$user/.ssh
   chmod 700 /home/$user/.ssh
-  chmod 600 /home/$user/authorized_keys
+  chmod 600 /home/$user/.ssh/authorized_keys
   echo "chowned"
   pause 2
 }
