@@ -4,7 +4,7 @@
 
 user='xenu'
 password='0000000'
-pub_key=0000000.pub
+pub_key=''
 email='kittens@mailinator.com'
 pkg_mngr='apt-get'
 pkg_base='vim-nox git python3 '
@@ -121,6 +121,7 @@ set_ssh () {
         [yY][eE][sS]|[yY])
             true
             rm -rf /home/$user/.ssh
+            dir_nonsense
             ;;
         *)
             false
@@ -128,33 +129,35 @@ set_ssh () {
             sleep 1
             ;;
       esac
-  else
-      echo "mkdir"
-      mkdir /home/$user/.ssh || echo "cant make ssh folder"
-      sleep 1
-      #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-      echo "echo key"
-      echo $pub_key >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
-      echo "Dolphinately?"
-      sleep 1
-      cat /home/$user/.ssh/authorized_keys
-      echo "adjusting config / removing root login"
-      sleep 1
-      sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
-      sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-      sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-      sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-      echo "done adjusting."
-      sleep 1
-      echo "chowning"
-      chown -R $user:$user /home/$user/.ssh
-      chmod 700 /home/$user/.ssh
-      chmod 600 /home/$user/authorized_keys
-      echo "chowned"
-      pause 2
   fi
+  echo "im outta the if!"
+  dir_nonsense
 }
-
+dir_nonsense () {
+  echo "mkdir"
+  mkdir /home/$user/.ssh || echo "cant make ssh folder"
+  sleep 1
+  #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
+  echo "echo key"
+  echo $pub_key >> /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+  echo "Dolphinately?"
+  sleep 1
+  cat /home/$user/.ssh/authorized_keys
+  echo "adjusting config / removing root login"
+  sleep 1
+  sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
+  sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+  sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+  sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
+  echo "done adjusting."
+  sleep 1
+  echo "chowning"
+  chown -R $user:$user /home/$user/.ssh
+  chmod 700 /home/$user/.ssh
+  chmod 600 /home/$user/authorized_keys
+  echo "chowned"
+  pause 2
+}
 pub_check () {
 	pub=$pub_key
 	if [[ ! -e $pub ]]; then
