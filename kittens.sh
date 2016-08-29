@@ -128,7 +128,7 @@ set_ssh () {
   fi
   mkdir /home/$user/.ssh || echo "cant make ssh folder"
   touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-  cat $pub_key | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+  cat $pub_key > /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   cat /home/$user/.ssh/authorized_keys
   echo "adjusting config [+]"
   sleep 1
