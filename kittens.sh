@@ -2,14 +2,14 @@
 # doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
 # git clone https://github.com/archae0pteryx/kittens.git
 
-user='securfr1'
+user='xenu'
 password='0000000'
-pub_key='1111111.pub'
-email=''
+email='kittens@mailinator.com'
+pub_key='0000000.pub'
 pkg_mngr='apt-get'
-pkg_base=''
+pkg_base='vim-nox git python3 '
 pkg_net='nethogs'
-pkg_srv='apache2 python-letsencrypt-apache php libapache2-mod-php php-mcrypt php-mysql'
+pkg_srv='apache2'
 pkg_db='mariadb-server'
 db_r_pw='0000000'
 m_0='idi0t'
@@ -24,7 +24,7 @@ pause () {
 show_menus() {
 	clear
 	echo ""
-  echo "(k)   ROCK(k)"
+  echo "roc(k)"
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
@@ -33,7 +33,7 @@ show_menus() {
   echo "(n)etwork utils"
 	echo "(s)erver"
 	echo "(d)atabase"
-	echo "(h)set ss(h)"
+	echo "set ss(h)"
 	echo "(f)irewall"
   echo "(r)eset services"
   echo "r(e)boot"
@@ -87,7 +87,6 @@ install_net () {
 }
 install_srv () {
 	$pkg_mngr install -y $pkg_srv || fail_net
-  bounce_ufw
 }
 
 install_db () {
@@ -109,11 +108,12 @@ make_user () {
     echo "new pass"
     useradd -m -G sudo -s /bin/bash -p $(openssl passwd $pass) $user
     chown -R $user:$user /home/$user
-    sleep 1
+    pause
 }
 
 set_ssh () {
   echo "Setting Keys."
+  pause
 	if [[ -e "/home/$user/.ssh" ]]; then
 		echo "ssh folder exists"
     read -r -p "${1:-Remove? [y/N]} " response
@@ -121,54 +121,42 @@ set_ssh () {
         [yY][eE][sS]|[yY])
             true
             rm -rf /home/$user/.ssh
-            dir_nonsense
             ;;
         *)
             false
-            echo "okie. not removing squat"
+            echo "okie."
             sleep 1
+            return
             ;;
       esac
-    else
-      dir_nonsense
   fi
-  #echo "im outta the if!"
-  #sleep 2
-}
-dir_nonsense () {
-  echo "mkdir"
   mkdir /home/$user/.ssh || echo "cant make ssh folder"
-  sleep 1
-  #touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-  echo "echo key"
-  touch /home/$user/.ssh/authorized_keys
-  cat $pub_key > /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
-  echo "Dolphinately?"
-  sleep 1
+  touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
+  cat $pub_key | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   cat /home/$user/.ssh/authorized_keys
   echo "adjusting config / removing root login"
-  sleep 1
+  pause
   sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
   sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
   sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-  echo "done adjusting."
-  sleep 1
+  echo "set ssh."
   echo "chowning"
   chown -R $user:$user /home/$user/.ssh
   chmod 700 /home/$user/.ssh
-  chmod 600 /home/$user/.ssh/authorized_keys
-  echo "chowned"
+  chmod 600 /home/$user/authorized_keys
   sleep 2
 }
-pub_check () {
+
+pee_check () {
 	pub=$pub_key
 	if [[ ! -e $pub ]]; then
-			echo "no ssh key.pub"
-			sleep 2
+			echo "no key"
+			sleep 1
 		else
 			echo "key [+]"
-			sleep 2
+			sleep 1
+			cat $pub
 	fi
 }
 
@@ -207,34 +195,19 @@ bounce_ufw () {
 	echo "bounced ufw"
 	sleep 1
 }
-bounce_srv () {
-  systemctl restart apache2
-  echo "bounced apache"
-  sleep 1
-}
-
-bounce_net () {
-  return
-}
 
 rock () {
-    read -r -p "${1:-Rock? y/n} " response
+    read -r -p "${1:-Rock and Roll? [y/N]} " response
     case $response in
         [yY][eE][sS]|[yY])
             true
-            root_check
-            pub_check
-            #py_check
             update_schmupdate
-            #install_base
-            #install_net
+            install_base
+            install_net
             install_db
             install_srv
-            make_user
-            set_ssh
-            set_ufw
-            echo "fin."
-            sleep 3
+						bounce_ufw
+						bounce_ssh
             reboot
             ;;
         *)
@@ -246,7 +219,7 @@ rock () {
 
 clear
 root_check
-#trap '' SIGINT SIGQUIT SIGTSTP
+trap '' SIGINT SIGQUIT SIGTSTP
 while true
 do
 	show_menus
