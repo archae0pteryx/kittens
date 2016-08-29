@@ -2,20 +2,17 @@
 # doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
 # git clone https://github.com/archae0pteryx/kittens.git
 
-user='xenu'
+user='securfr1'
 password='0000000'
-email='kittens@mailinator.com'
-pub_key='0000000.pub'
+pub_key='keys/1111111.pub'
 pkg_mngr='apt-get'
-pkg_base='vim-nox git python3 '
+pkg_base='git python3 curl phpmyadmin'
 pkg_net='nethogs'
-pkg_srv='apache2'
-pkg_db='mariadb-server'
+pkg_srv='apache2 php php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc libapache2-mod-php php-mysql php-cli'
+pkg_db='mysql-server'
 db_r_pw='0000000'
-m_0='idi0t'
 salt='0x0x0x0'
-
-holes='ssh http https'
+holes='ssh http https mysql'
 
 pause () {
   read -r -p "Press [Enter]" on_press
@@ -24,7 +21,7 @@ pause () {
 show_menus() {
 	clear
 	echo ""
-  echo "roc(k)"
+  echo "(k)Rock"
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
@@ -33,15 +30,15 @@ show_menus() {
   echo "(n)etwork utils"
 	echo "(s)erver"
 	echo "(d)atabase"
-	echo "set ss(h)"
+	echo "(h)Set ssh"
 	echo "(f)irewall"
   echo "(r)eset services"
-  echo "r(e)boot"
-  echo "shu(t)down"
-  echo "e(x)it"
+  echo "(e)reboot"
+  echo "(t)shutdown"
+  echo "(x)exit"
 }
 opts () {
-	read -r -p "? " choice
+	read -r -p "Select one:" choice
 	case $choice in
     "k") rock ;;
 		"c") pee_check py_check ;;
@@ -64,9 +61,7 @@ opts () {
 
 root_check () {
 	if [[ "$EUID" -ne 0 ]]; then
-		echo "root"
-		sleep 1
-		echo $m_0
+		echo "root! [-]"
 		sleep 1
 		exit 0
 	else
@@ -77,7 +72,7 @@ root_check () {
 update_schmupdate () {
 	echo "update schmupdate"
 	sleep 1
-	$pkg_mngr update || fail_net
+	$pkg_mngr update && $pkg_mngr upgrade -y || fail_net
 }
 install_base () {
 	$pkg_mngr install -y $pkg_base || fail_net
@@ -92,6 +87,7 @@ install_srv () {
 install_db () {
   $pkg_mngr install -y $pkg_db || fail_net
   mysqladmin -u root password $pass
+  mysql_secure_installation
 }
 perms () {
   chown -R $user:$user /home/$user || return
@@ -112,7 +108,7 @@ make_user () {
 }
 
 set_ssh () {
-  echo "Setting Keys."
+  echo "Setting Keys..."
   pause
 	if [[ -e "/home/$user/.ssh" ]]; then
 		echo "ssh folder exists"
@@ -134,21 +130,23 @@ set_ssh () {
   touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
   cat $pub_key | /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
   cat /home/$user/.ssh/authorized_keys
-  echo "adjusting config / removing root login"
-  pause
+  echo "adjusting config [+]"
+  sleep 1
   sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
   sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
   sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-  echo "set ssh."
-  echo "chowning"
+  echo "set ssh [+]"
+  sleep 1
   chown -R $user:$user /home/$user/.ssh
   chmod 700 /home/$user/.ssh
   chmod 600 /home/$user/authorized_keys
-  sleep 2
+  sleep 1
+  echo "chowned home ssh [+]"
+  sleep 1
 }
 
-pee_check () {
+pub_check () {
 	pub=$pub_key
 	if [[ ! -e $pub ]]; then
 			echo "no key"
@@ -199,15 +197,16 @@ bounce_ufw () {
 rock () {
     read -r -p "${1:-Rock and Roll? [y/N]} " response
     case $response in
-        [yY][eE][sS]|[yY])
+        [yY])
             true
             update_schmupdate
             install_base
-            install_net
+            #install_net
             install_db
-            install_srv
-						bounce_ufw
-						bounce_ssh
+            #install_srv
+            make_user
+            set_ssh
+            set_ufw
             reboot
             ;;
         *)
@@ -219,7 +218,7 @@ rock () {
 
 clear
 root_check
-trap '' SIGINT SIGQUIT SIGTSTP
+#trap '' SIGINT SIGQUIT SIGTSTP
 while true
 do
 	show_menus
