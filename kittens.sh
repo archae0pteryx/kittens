@@ -2,9 +2,9 @@
 # doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
 # git clone https://github.com/archae0pteryx/kittens.git
 
-user='securfr1'
+user='xenu'
 password='0000000'
-pub_key='keys/22222222.pub'
+pub_key='keys/0000000.pub'
 pkg_mngr='apt-get'
 pkg_base='git python3 curl'
 pkg_net='nethogs nmap'
@@ -21,7 +21,7 @@ pause () {
 show_menus() {
 	clear
 	echo ""
-  echo "(k)Rock"
+  echo "(k)Rock (Defaults)"
 	echo "(c)heck reqs"
 	echo "(u)pgrade"
 	echo "(i)nstall core"
