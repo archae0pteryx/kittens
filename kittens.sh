@@ -4,11 +4,11 @@
 
 user='securfr1'
 password='0000000'
-pub_key='keys/1111111.pub'
+pub_key='keys/22222222.pub'
 pkg_mngr='apt-get'
-pkg_base='git python3 curl phpmyadmin'
+pkg_base='git python3 curl'
 pkg_net='nethogs nmap'
-pkg_srv='apache2 php php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc libapache2-mod-php php-mysql php-cli'
+pkg_srv='apache2 php php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc libapache2-mod-php php-mysql php-cli phpmyadmin'
 pkg_db='mysql-server'
 db_r_pw='0000000'
 salt='0x0x0x0'
@@ -200,10 +200,10 @@ rock () {
         [yY])
             true
             update_schmupdate
+            install_db
             install_base
             #install_net
-            install_db
-            #install_srv
+            install_srv
             make_user
             set_ssh
             set_ufw
