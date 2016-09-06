@@ -1,7 +1,8 @@
-#### Just a simple BASH setup script to set packages and ufw / ssh.
+### Just a simple BASH setup script to set packages and ufw / ssh.
+---
 ##### kittens.sh
 [![Build Status](https://travis-ci.org/archae0pteryx/kittens.svg?branch=master)](https://travis-ci.org/archae0pteryx/kittens)
-
+---
 1. Select your username in the vars at top of kittens.sh
 2. put your pubic key into the keys folder (I have provided default ones if you need. obviously don't use in production)
 3. You can exclude whole chunks of the package install by commenting out the appropriate call in the "Rock" function.
