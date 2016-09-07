@@ -1,19 +1,19 @@
-### Kittens "God" Script
+## Kittens
+[![Build Status](https://travis-ci.org/archae0pteryx/kittens.svg?branch=master)](https://travis-ci.org/archae0pteryx/kittens)
+> Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr in the ears our fanciful machines. -_ Plato_
 
+### A script to take care of the "dirty work" involved with initial server setup.
 
-Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr to our fanciful machines.
+*This script is meant to be run on a fresh Linux install
 
 ---
-##### Kittens.sh
-
-[![Build Status](https://travis-ci.org/archae0pteryx/kittens.svg?branch=master)](https://travis-ci.org/archae0pteryx/kittens)
-
+#### Quick, wham, bam, thank you ma'am? do:
         chmod +x kittens.sh && ./kittens.sh
 ---
 ### What does it do?
 Kittens will configure ssh, ufw, openvpn, database, and many other things that make sys admin boring. Throw all of your standard packages in the mix and kittens will create a user, lockdown ssh for key auth only, set ufw rules, update/upgrade, install all the packages and then kindly reboot.
 
-#### How the hell do you drive this thing?
+### How the hell do you drive this thing?
 1. Select your vars in **core/vars**
 2. Gently place your pubic key into the keys folder **core/keys** (a default one is provided)
 3. Run script
