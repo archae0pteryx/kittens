@@ -1,6 +1,6 @@
 ## Kittens
 [![Build Status](https://travis-ci.org/archae0pteryx/kittens.svg?branch=master)](https://travis-ci.org/archae0pteryx/kittens)
-> Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr in the ears of our fanciful machines. -_ Plato_
+> Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr in the ears of our fanciful machines. - _ Plato_
 
 ### A script to take care of the "dirty work" involved with initial server setup.
 
