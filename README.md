@@ -8,13 +8,11 @@
 ---
 #### Directions:
 1. Select your username in the vars at top of kittens.sh
-2. put your pubic key into the keys folder (I have provided default ones if you need. obviously don't use in production)
+2. put your pubic key into the keys folder (I have provided default ones if you need. Future keygen support in the works...)
 3. Use "Rock" to execute the whole kit-n-kaboodle
-3. Run Script
-
 
 #### TODO*
-- Store Globals in json? 
+- Store Globals in json?
 - OpenVPN setup
 - Pass password ahead of time.
 - Other pkg mgmt / distro support
