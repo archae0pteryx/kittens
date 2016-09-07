@@ -13,6 +13,8 @@
 
 #### TODO*
 - Store Globals in json?
+- Oh-My-Zsh setup
+- either create or pull .cfg git alias
 - OpenVPN setup
 - Pass password ahead of time.
 - Other pkg mgmt / distro support
