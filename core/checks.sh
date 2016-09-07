@@ -1,3 +1,7 @@
+#!/bin/bash
+#
+# @archae0pteryx
+
 if [[ "$EUID" -ne 0 ]]; then
   echo "root! [-]"
   sleep 1
