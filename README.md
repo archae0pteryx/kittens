@@ -1,7 +1,7 @@
 ### Kittens "God" Script
 
 
-Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr to our fanciful machines. 
+Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr to our fanciful machines.
 
 ---
 ##### Kittens.sh
@@ -11,12 +11,12 @@ Just as the divine hand of our creator Xenu gropes at our natural world, so too 
         chmod +x kittens.sh && ./kittens.sh
 ---
 #### Directions:
-1. Select your username in the vars at top of kittens.sh
-2. put your pubic key into the keys folder (I have provided default ones if you need. Future keygen support in the works...)
-3. Use "Rock" to execute the whole kit-n-kaboodle
+1. Select your vars in **core/vars**
+2. put your pubic key into the keys folder **core/keys** (I have provided default ones if you need. Future keygen support in the works...)
+3. Use "**Rock**" to execute the whole kit-n-kaboodle
 
 #### TODO*
-- Store Globals in json?
+- ~~Store Globals in json?~~
 - Oh-My-Zsh setup
 - either create or pull .cfg git alias
 - OpenVPN setup
