@@ -18,7 +18,7 @@ Kittens will configure ssh, ufw, openvpn, database, and many other things that m
 
 ### How the hell do you drive this thing?
 1. Select your vars in **core/vars**
-2. Gently place your pubic key into the keys folder **core/keys** (a default one is provided)
+2. Gently place your pubic key into the keys folder **core/cry** (a default one is provided)
 3. Run script
 3. Use "**Rock**" to execute the whole kit-n-kaboodle
  - OR, you can
