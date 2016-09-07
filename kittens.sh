@@ -13,7 +13,10 @@ pkg_db='mysql-server'
 db_r_pw='0000000'
 salt='0x0x0x0'
 holes='ssh http https mysql'
-
+if readlink /proc/$$/exe | grep -qs "dash"; then
+	echo "This script needs to be run with bash, not sh"
+	exit 1
+fi
 pause () {
   read -r -p "Press [Enter]" on_press
 }
@@ -41,8 +44,8 @@ opts () {
 	read -r -p "Select one:" choice
 	case $choice in
     "k") rock ;;
-		"c") pee_check py_check ;;
-		"u") update_schmupdate ;;
+		"c") ./core/checks.sh ;;
+		"u") ./core/ups.sh ;;
 		"i") install_base ;;
     "p") perms ;;
     "m") make_user ;;
@@ -59,21 +62,19 @@ opts () {
 	esac
 }
 
-root_check () {
-	if [[ "$EUID" -ne 0 ]]; then
-		echo "root! [-]"
-		sleep 1
-		exit 0
-	else
-		echo "root [+]"
-    sleep 1
-	fi
-}
-update_schmupdate () {
-	echo "update schmupdate"
-	sleep 1
-	$pkg_mngr update && $pkg_mngr upgrade -y || fail_net
-}
+# root_check () {
+# 	if [[ "$EUID" -ne 0 ]]; then
+# 		echo "root! [-]"
+# 		sleep 1
+# 		exit 0
+# 	else
+# 		echo "root [+]"
+#     sleep 1
+# 	fi
+# }
+# update_schmupdate () {
+# 	./core/ups.sh
+# }
 install_base () {
 	$pkg_mngr install -y $pkg_base || fail_net
 }
@@ -85,9 +86,7 @@ install_srv () {
 }
 
 install_db () {
-  $pkg_mngr install -y $pkg_db || fail_net
-  mysqladmin -u root password $pass
-  mysql_secure_installation
+  ./core/set_db.sh
 }
 perms () {
   chown -R $user:$user /home/$user || return
@@ -107,68 +106,68 @@ make_user () {
     pause
 }
 
-set_ssh () {
-  echo "Setting Keys..."
-  pause
-	if [[ -e "/home/$user/.ssh" ]]; then
-		echo "ssh folder exists"
-    read -r -p "${1:-Remove? [y/N]} " response
-      case $response in
-        [yY][eE][sS]|[yY])
-            true
-            rm -rf /home/$user/.ssh
-            ;;
-        *)
-            false
-            echo "okie."
-            sleep 1
-            return
-            ;;
-      esac
-  fi
-  mkdir /home/$user/.ssh || echo "cant make ssh folder"
-  touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
-  cat $pub_key > /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
-  cat /home/$user/.ssh/authorized_keys
-  echo "adjusting config [+]"
-  sleep 1
-  sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
-  sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-  sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-  sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-  echo "set ssh [+]"
-  sleep 1
-  chown -R $user:$user /home/$user/.ssh
-  chmod 700 /home/$user/.ssh
-  chmod 600 /home/$user/authorized_keys
-  sleep 1
-  echo "chowned home ssh [+]"
-  sleep 1
-}
+# set_ssh () {
+#   echo "Setting Keys..."
+#   pause
+# 	if [[ -e "/home/$user/.ssh" ]]; then
+# 		echo "ssh folder exists"
+#     read -r -p "${1:-Remove? [y/N]} " response
+#       case $response in
+#         [yY][eE][sS]|[yY])
+#             true
+#             rm -rf /home/$user/.ssh
+#             ;;
+#         *)
+#             false
+#             echo "okie."
+#             sleep 1
+#             return
+#             ;;
+#       esac
+#   fi
+#   mkdir /home/$user/.ssh || echo "cant make ssh folder"
+#   touch /home/$user/.ssh/authorized_keys || echo "cant touch ssh"
+#   cat $pub_key > /home/$user/.ssh/authorized_keys || echo "cant cat auth_keys"
+#   cat /home/$user/.ssh/authorized_keys
+#   echo "adjusting config [+]"
+#   sleep 1
+#   sed -i 's/ServerKeyBits 1024/ServerKeyBits 2048/g' /etc/ssh/sshd_config
+#   sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+#   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#   sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
+#   echo "set ssh [+]"
+#   sleep 1
+#   chown -R $user:$user /home/$user/.ssh
+#   chmod 700 /home/$user/.ssh
+#   chmod 600 /home/$user/authorized_keys
+#   sleep 1
+#   echo "chowned home ssh [+]"
+#   sleep 1
+# }
 
-pub_check () {
-	pub=$pub_key
-	if [[ ! -e $pub ]]; then
-			echo "no key"
-			sleep 1
-		else
-			echo "key [+]"
-			sleep 1
-			cat $pub
-	fi
-}
+# pub_check () {
+# 	pub=$pub_key
+# 	if [[ ! -e $pub ]]; then
+# 			echo "no key"
+# 			sleep 1
+# 		else
+# 			echo "key [+]"
+# 			sleep 1
+# 			cat $pub
+# 	fi
+# }
 
-py_check () {
-	pp='/usr/bin/python3'
-	if [[ ! -e $pp ]]; then
-			echo "no python3"
-			update_schmupdate
-		else
-			echo "python3 [+]"
-			#python __init__.py
-			#exit 1
-	fi
-}
+# py_check () {
+# 	pp='/usr/bin/python3'
+# 	if [[ ! -e $pp ]]; then
+# 			echo "no python3"
+# 			update_schmupdate
+# 		else
+# 			echo "python3 [+]"
+# 			#python __init__.py
+# 			#exit 1
+# 	fi
+# }
 fail_net () {
 	echo 'do something about internet'
 	sleep 2
