@@ -2,18 +2,29 @@ linux_distro="Ubuntu-16-04-amd64"
 #linux_distro="Ubuntu-14-04-amd64"
 #linux_distro="Debian-7-amd64"
 #linux_distro="CentOS-7-3-amd64"
+pkg_mngr='apt-get'
 
 user='xenu'
 
 password='0000000'
+salt='0x0x0x0'
 
 pub_key='keys/0000000.pub'
 
-pkg_mngr='apt-get'
+# Package Selection
+
+# Base Packages
 pkg_base='git python3 curl'
+
+# Network Packages
 pkg_net='nethogs nmap openvpn easy-rsa'
+
+# Server Packages
 pkg_srv='apache2 php php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc libapache2-mod-php php-mysql php-cli phpmyadmin'
+
+# Database Packages
 pkg_db='mysql-server'
 db_r_pw='0000000'
-salt='0x0x0x0'
+
+# UFW rules (holes)
 holes='ssh http https mysql'
