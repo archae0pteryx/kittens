@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # @archae0pteryx
+source vars
 
 if [[ "$EUID" -ne 0 ]]; then
   echo "root! [-]"
