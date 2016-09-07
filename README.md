@@ -1,4 +1,8 @@
-### Just a simple BASH setup script to set packages and ufw / ssh.
+### Kittens "God" Script
+
+
+Just as the divine hand of our creator Xenu gropes at our natural world, so too do kittens purr to our fanciful machines. 
+
 ---
 ##### Kittens.sh
 
