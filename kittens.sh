@@ -7,7 +7,7 @@ password='0000000'
 pub_key='keys/0000000.pub'
 pkg_mngr='apt-get'
 pkg_base='git python3 curl'
-pkg_net='nethogs nmap'
+pkg_net='nethogs nmap openvpn easy-rsa'
 pkg_srv='apache2 php php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc libapache2-mod-php php-mysql php-cli phpmyadmin'
 pkg_db='mysql-server'
 db_r_pw='0000000'
@@ -193,7 +193,18 @@ bounce_ufw () {
 	echo "bounced ufw"
 	sleep 1
 }
+set_vpn () {
+  command -v openvpn >/dev/null 2>&1 || apt update && apt install openvpn easy-rsa
+  make-cadir ~/openvpn-ca
+  #cd ~/openvpn-ca
+  sed -i 's/KEY_COUNTRY="US"/KEY_COUNTRY="US"/g' ~/openvpn-ca/vars
+  sed -i 's/KEY_PROVINCE="CA"/KEY_PROVINCE="OR"/g' ~/openvpn-ca/vars
+  sed -i 's/KEY_CITY="SanFrancisco"/KEY_CITY="Portland"/g' ~/openvpn-ca/vars
+  sed -i 's/KEY_ORG="Fort-Funston"/KEY_ORG="SomeORG"/g' ~/openvpn-ca/vars
+  sed -i 's/KEY_EMAIL="me@myhost.mydomain"/KEY_EMAIL="ryan@myvagina.in"/g' ~/openvpn-ca/vars
+  sed -i 's/KEY_OU="MyOrganizationalUnit"/KEY_OU="UnitUnit"/g' ~/openvpn-ca/vars
 
+}
 rock () {
     read -r -p "${1:-Rock and Roll? [y/N]} " response
     case $response in
