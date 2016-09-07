@@ -2,21 +2,6 @@
 #
 # @archae0pteryx
 
-# doctl compute droplet create monkies --region sfo1 --image ubuntu-16-04-x64	--size 512mb --ssh-keys fb:86:91:f8:a8:d2:76:39:dd:bb:61:3d:a4:13:97:fa
-# git clone https://github.com/archae0pteryx/kittens.git
-
-user='xenu'
-password='0000000'
-pub_key='keys/0000000.pub'
-pkg_mngr='apt-get'
-pkg_base='git python3 curl'
-pkg_net='nethogs nmap openvpn easy-rsa'
-pkg_srv='apache2 php php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc libapache2-mod-php php-mysql php-cli phpmyadmin'
-pkg_db='mysql-server'
-db_r_pw='0000000'
-salt='0x0x0x0'
-holes='ssh http https mysql'
-
 if readlink /proc/$$/exe | grep -qs "dash"; then
 	echo "This script needs to be run with bash, not sh"
 	exit 1
