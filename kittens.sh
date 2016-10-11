@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # @archae0pteryx
+source core/vars
 if readlink /proc/$$/exe | grep -qs "dash"; then
 	echo "This script needs to be run with bash, not sh"
 	exit 1

@@ -1,6 +1,5 @@
 #!/bin/bash
 clear
-source vars
 echo "runall [+]"
 sleep 1
 ./core/checks.sh
