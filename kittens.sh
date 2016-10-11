@@ -35,7 +35,7 @@ echo ""
 opts () {
 	read -r -p ">>" choice
 	case $choice in
-    "r") /bin/bash core/runall.sh ;;
+    "r") ./core/runall.sh ;;
 		#"") ./core/checks.sh ;;
 		"u") ./core/ups.sh ;;
 		"b") ./core/ins/in_base.sh ;;
